@@ -71,7 +71,7 @@ const News = () => {
   }
 
   return (
-    <div className="container m-5">
+    <div className="container mt-5">
       <Modal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)}>
         <h2>Update News</h2>
         <input value={updateNewsTitle} onChange={(e) => setUpdateNewsTitle(e.target.value)} placeholder="Title" />
@@ -86,18 +86,23 @@ const News = () => {
                 <img src={article.image ? article.image  : "https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg?20200913095930"} className="card-img-top" alt="..." />
                 <div className="card-body">
                   <h5 className="card-title">{article.title}</h5>
-                  <p className="card-text">{article.description}</p>
-                  <a className="card-read-more" onClick={() => navigateToSingleNews(article._id)}>
-                    <span className = "card-span">Read More</span>
-                  </a>
-                  <button onClick={() => deleteNews(article._id)}>Delete</button>
-                  <button onClick={() => updateNews(article._id, article.title, article.description)}>Update</button>
+                  <p onClick={() => navigateToSingleNews(article._id)} className="card-text">{article.description}</p>
+                  
+               { article.description.length > 30 &&   <a className="card-read-more" onClick={() => navigateToSingleNews(article._id)}>
+                    <span   className = "card-span text-primary">Read More</span>
+                  </a>}
+                   <button type="button" class="btn btn-secondary " onClick={() => updateNews(article._id, article.title, article.description)}>Update</button>
+                    <button type="button" class="btn btn-danger update-btn " onClick={() => deleteNews(article._id)}>Delete</button>
                 </div>
               </div>
             </div>
           ))
         ) : (
-          <p>No News to Display!</p>
+          <div class="d-flex justify-content-center">
+<div class="spinner-grow text-success" role="status">
+   
+</div>
+</div>
         )}
       </div>
     </div>
