@@ -120,7 +120,7 @@ export default function CreateAppoinment() {
                         for="appointmentTopic"
                         class="col-sm-2 col-form-label"
                       >
-                        Topic
+                        Topic *
                       </label>
                       <div class="col-sm-6">
                         <Form.Control
@@ -148,7 +148,7 @@ export default function CreateAppoinment() {
                         for="appointmentDescription"
                         class="col-sm-2 col-form-label"
                       >
-                        Description
+                        Description *
                       </label>
                       <div class="col-sm-6">
                         <Form.Control
@@ -190,7 +190,7 @@ export default function CreateAppoinment() {
 
                     <div class="row mb-3">
                       <label for="farmerName" class="col-sm-2 col-form-label">
-                        Farmer Name
+                        Farmer Name *
                       </label>
                       <div class="col-sm-6">
                         <Form.Control
