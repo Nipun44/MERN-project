@@ -52,7 +52,7 @@ const AddNews = () => {
       setErrors(newErrors);
     } else {
       setIsLoading(true);
-      // No errors! Put any logic here for the form submission!
+      // No errors!
       const data = (
         await axios.post("http://localhost:3007/api/v1/news/add/", form)
       ).status;

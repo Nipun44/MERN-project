@@ -53,7 +53,7 @@ export default function CreateAppoinment() {
       // We got errors!
       setErrors(newErrors);
     } else {
-      // No errors! Put any logic here for the form submission!
+      // No errors!
       const data = (
         await axios.post(
           "http://localhost:3007/api/v1/appointment/appointment/",
