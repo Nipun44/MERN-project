@@ -1,21 +1,14 @@
 const express = require("express");
-import {
-    addNews,
-    deleteNews,
-    getAllNews,
-    getById,
-    getByUserId,
-    updateNews,
-  } from "../Controllers/news_controller";
+const newsController = require("../Controllers/news_controller");
 
 //const authController = require("../Controllers/auth_controller");
-const newsRouter = express.Router();
+const router = express.Router();
 
-newsRouter.get("/", getAllNews);
-newsRouter.post("/add", addNews); //edited for image upload
-newsRouter.put("/update/:id", updateNews);
-newsRouter.get("/:id", getById);
-newsRouter.delete("/:id", deleteNews);
-newsRouter.get("/user/:id", getByUserId); // getting nes from the user
+router.get("/", newsController.getAllNews);
+router.post("/add", newsController.addNews); //edited for image upload
+router.put("/update/:id", newsController.updateNews);
+router.get("/:id", newsController.getById);
+router.delete("/:id", newsController.deleteNews);
+router.get("/user/:id", newsController.getByUserId); // getting nes from the user
 
-export default newsRouter;
+module.exports = router;

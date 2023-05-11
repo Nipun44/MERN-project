@@ -18,19 +18,23 @@ const SingleNews = () => {
       })
   }, [id]);
 
-  if (!article) return <p>Loading...</p>;
+  if (!article) return <div className="d-flex justify-content-center mt-5">
+<div class="spinner-grow text-success" role="status">
+   
+</div>
+</div>;
 
   return (
-    <div className="container m-5">
+    <div className="container mt-5">
       <div className="row">
         <div className="col-md-12 my-3">
-          <div className="card">
+          {/* <div className="card"> */}
             <img src={article.image ? article.image : "https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg?20200913095930"} className="card-img-top" alt="..." />
             <div className="card-body">
               <h5 className="card-title">{article.title}</h5>
               <p className="card-text">{article.description}</p>
             </div>
-          </div>
+          {/* </div> */}
         </div>
       </div>
     </div>

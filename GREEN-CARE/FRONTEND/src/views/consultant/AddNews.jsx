@@ -1,110 +1,146 @@
-import { Box, Button, InputLabel, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-
-const labelStyles = { mb: 1, mt: 2, fontSize: "24px", fontWeight: "bold" };
+import { Form, Button } from "react-bootstrap";
+import SoloAlert from "soloalert";
 const AddNews = () => {
-  
   const navigate = useNavigate();
-  const [inputs, setInputs] = useState({
-    title: "",
-    description: "",
-    imageURL: "",
-  });
-  const handleChange = (e) => {
-    setInputs((prevState) => ({
-      ...prevState,
-      [e.target.name]: e.target.value,
-    }));
+
+  const [form, setForm] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState({});
+
+  const setField = (field, value) => {
+    setForm({
+      ...form,
+      [field]: value,
+    });
+
+    // Check and see if errors exist, and remove them from the error object:
+    if (!!errors[field])
+      setErrors({
+        ...errors,
+        [field]: null,
+      });
   };
-  const sendRequest = async () => {
-    const res = await axios.post("http://localhost:3007/api/v1/news/add/", {
-        title: inputs.title,
-        description: inputs.description,
-        image: inputs.imageURL,
-        // user: localStorage.getItem("userId"),
-      })
-      .catch((err) => console.log(err));
-    const data = await res.data;
-    return data;
+
+  const findFormErrors = () => {
+    const { title, description, image } = form;
+    const newErrors = {};
+    // Topic errors
+    if (!title || title === "") newErrors.title = "title cannot be blank!";
+    else if (title.length > 30) newErrors.title = "title is too long!";
+    // Description errors
+    if (!description || description === "")
+      newErrors.description = "description cannot be blank";
+    else if (description.length > 300)
+      newErrors.description = "description is too long!";
+
+    // Farmer Name errors
+    if (!image || image === "") newErrors.image = "cannot be blank!";
+
+    return newErrors;
   };
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(inputs);
-    sendRequest()
-      .then((data) => console.log(data))
-      .then(() => navigate("/test"));
+    // get our new errors
+    const newErrors = findFormErrors();
+    // Conditional logic:
+    if (Object.keys(newErrors).length > 0) {
+      // We got errors!
+      setErrors(newErrors);
+    } else {
+      setIsLoading(true);
+      // No errors!
+      const data = (
+        await axios.post("http://localhost:3007/api/v1/news/add/", form)
+      ).status;
+      console.log(data);
+      if (data === 201) {
+        SoloAlert.alert({
+          title: "Success!",
+          body: "News added successfully",
+          icon: "success",
+          theme: "dark",
+          useTransparency: true,
+          onOk: function () {},
+        });
+        navigate("/test");
+        setIsLoading(false);
+      }
+    }
   };
+
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <Box
-          border={3}
-          borderColor="linear-gradient(90deg, rgba(58,75,180,1) 2%, rgba(116,49,110,1) 36%, rgba(2,0,161,1) 73%, rgba(69,92,252,1) 100%)"
-          borderRadius={10}
-          boxShadow="10px 10px 20px #ccc"
-          padding={3}
-          margin={"auto"}
-          marginTop={3}
-          display="flex"
-          flexDirection={"column"}
-          width={"80%"}
-        >
-          <Typography
-            //
-            fontWeight={"bold"}
-            padding={3}
-            color="grey"
-            variant="h2"
-            textAlign={"center"}
-          >
-            Create News
-          </Typography>
-          <InputLabel sx={labelStyles}>
-            Title
-          </InputLabel>
-          <TextField
-           
-            name="title"
-            onChange={handleChange}
-            value={inputs.title}
-            margin="auto"
-            variant="outlined"
-          />
-          <InputLabel sx={labelStyles}>
-            Description
-          </InputLabel>
-          <TextField
-           
-            name="description"
-            onChange={handleChange}
-            value={inputs.description}
-            margin="auto"
-            variant="outlined"
-          />
-          <InputLabel sx={labelStyles}>
-            ImageURL
-          </InputLabel>
-          <TextField
-           
-            name="imageURL"
-            onChange={handleChange}
-            value={inputs.imageURL}
-            margin="auto"
-            variant="outlined"
-          />
-          <Button
-            sx={{ mt: 2, borderRadius: 4 }}
-            variant="contained"
-            color="warning"
-            type="submit"
-          >
-            Submit
-          </Button>
-        </Box>
-      </form>
+    <div className="container">
+      <div className="version-controller">
+        <div className="mt-5">
+          <h2>Add News</h2>
+          <hr />
+        </div>
+        <Form>
+          <Form.Group className="form-group row mb-3">
+            <Form.Label className="col-3">Titile * </Form.Label>
+            <div className="col-9">
+              <Form.Control
+                type="text"
+                onChange={(e) => setField("title", e.target.value)}
+                // value={form.name || ""}
+                isInvalid={!!errors.title}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.title}
+              </Form.Control.Feedback>
+            </div>
+          </Form.Group>
+
+          <Form.Group className="form-group row mb-3">
+            <Form.Label className="col-3">Description * </Form.Label>
+            <div className="col-9">
+              <Form.Control
+                type="text"
+                onChange={(e) => setField("description", e.target.value)}
+                // value={form.name || ""}
+                isInvalid={!!errors.description}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.description}
+              </Form.Control.Feedback>
+            </div>
+          </Form.Group>
+
+          <Form.Group className="form-group row mb-3">
+            <Form.Label className="col-3">Image * </Form.Label>
+            <div className="col-9">
+              <Form.Control
+                type="text"
+                onChange={(e) => setField("image", e.target.value)}
+                // value={form.name || ""}
+                isInvalid={!!errors.image}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.image}
+              </Form.Control.Feedback>
+            </div>
+          </Form.Group>
+
+          <div className="text-end">
+            <Button variant="danger">Cancel</Button>
+
+            <Button
+              disabled={isLoading}
+              style={{ margin: "5px" }}
+              variant="success"
+              onClick={(e) => {
+                handleSubmit(e);
+              }}
+            >
+              Save and Close
+            </Button>
+          </div>
+        </Form>
+      </div>
     </div>
   );
 };
