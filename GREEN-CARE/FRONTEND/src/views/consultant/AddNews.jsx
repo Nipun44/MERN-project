@@ -60,7 +60,7 @@ const AddNews = () => {
       if (data === 201) {
         SoloAlert.alert({
           title: "Success!",
-          body: "Appointment added successfully",
+          body: "News added successfully",
           icon: "success",
           theme: "dark",
           useTransparency: true,
